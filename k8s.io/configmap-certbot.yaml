@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: letsencrypt-ssl-certificates
+data:
+  ssl-certifcates.properties: |
+    ssl=k8s.io,kubernetes.io,get.k8s.io,get.kubernetes.io

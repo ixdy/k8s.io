@@ -23,6 +23,10 @@ data:
         listen 80;
         listen 443 ssl;
 
+        location /.well-known/acme-challenge/ {
+          proxy_pass http://kubernetes-certbot;
+        }
+
         if ($arg_go-get = "1") {
           # This is a go-get operation.
           # Send any file in any repo to static content.
@@ -136,10 +140,15 @@ data:
         listen 80;
         # 443 is covered below.
 
+        location /.well-known/acme-challenge/ {
+          proxy_pass http://kubernetes-certbot;
+        }
+
         location / {
           root /www/get;
           index get-kube-insecure.sh;
         }
+
       }
       server {
         server_name get.k8s.io get.kubernetes.io;

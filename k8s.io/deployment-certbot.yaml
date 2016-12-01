@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubernetes-certbot
+  labels:
+    app: kubernetes-certbot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kubernetes-certbot
+    spec:
+      containers:
+        - name: certbot
+          image: gcr.io/jgrafton-kubernetes-test-1385/kubernetes-certbot
+          imagePullPolicy: Always
+          env:
+            - name: SECRET_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LETS_ENCRYPT_EMAIL
+              # TODO: Provide an email for let's encrypt.
+              value: jgrafton@google.com
+            - name: STAGING
+              value: "staging"
+          volumeMounts:
+            - mountPath: /etc/letsencrypt
+              name: letsencrypt-data
+            - mountPath: /etc/letsencrypt-certs
+              name: letsencrypt-certs-config
+      volumes:
+        - name: letsencrypt-data
+          # TODO: Consider using real, secure storage on your cluster.
+          emptyDir: {}
+        - name: letsencrypt-certs-config
+          configMap:
+            name: letsencrypt-ssl-certificates
+
