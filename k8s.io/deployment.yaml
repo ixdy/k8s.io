@@ -6,7 +6,7 @@ metadata:
     app: k8s-io
     version: v1
 spec:
-  replicas: 2
+  replicas: 1
   # selector defaults to template's labels
   strategy:
     type: RollingUpdate
@@ -25,14 +25,6 @@ spec:
         configMap:
           name: nginx
           # Map all keys to files.
-      - name: www-get
-        configMap:
-          name: www-get
-          # Map all keys to files.
-      - name: www-golang
-        configMap:
-          name: www-golang
-          # Map all keys to files.
       - name: ssl
         secret:
           secretName: ssl
@@ -42,7 +34,7 @@ spec:
         image: nginx:1.10-alpine  # = :stable-alpine as of 8/23/2016
         resources:
           limits:
-            cpu: 1
+            cpu: 0.5
             memory: 512Mi
         ports:
         - name: http
@@ -59,12 +51,6 @@ spec:
         volumeMounts:
         - name: nginx
           mountPath: /etc/nginx
-          readOnly: true
-        - name: www-get
-          mountPath: /www/get
-          readOnly: true
-        - name: www-golang
-          mountPath: /www/golang
           readOnly: true
         - name: ssl
           mountPath: /certs
